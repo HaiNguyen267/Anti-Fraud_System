@@ -484,6 +484,125 @@ files:
         };
     }
   learner_created: false
+- name: src/antifraud/dto/request/WithdrawRequest.java
+  visible: true
+  text: |
+    package antifraud.dto.request;
+
+
+    import javax.validation.constraints.Min;
+
+    public class WithdrawRequest {
+        @Min(value = 1, message = "value must be greater than 0")
+        private long amount;
+
+        public WithdrawRequest(int amount) {
+            this.amount = amount;
+        }
+
+        public WithdrawRequest() {
+        }
+
+        public long getAmount() {
+            return amount;
+        }
+
+        public void setAmount(long amount) {
+            this.amount = amount;
+        }
+    }
+  learner_created: true
+- name: src/antifraud/dto/response/ResultResponse.java
+  visible: true
+  text: |
+    package antifraud.dto.response;
+
+
+    public class ResultResponse {
+
+        public enum Result{
+            ALLOWED, MANUAL_PROCESSING, PROHIBITED
+        }
+
+        private Result result;
+
+        public ResultResponse(Result result) {
+            this.result = result;
+        }
+
+        public Result getResult() {
+            return result;
+        }
+
+        public void setResult(Result result) {
+            this.result = result;
+        }
+    }
+  learner_created: true
+- name: src/antifraud/controller/TransactionController.java
+  visible: true
+  text: |
+    package antifraud.controller;
+
+    import antifraud.dto.request.WithdrawRequest;
+    import antifraud.dto.response.ResultResponse;
+    import org.springframework.http.ResponseEntity;
+    import org.springframework.web.bind.annotation.PostMapping;
+    import org.springframework.web.bind.annotation.RequestBody;
+    import org.springframework.web.bind.annotation.RequestMapping;
+    import org.springframework.web.bind.annotation.RestController;
+
+    import javax.validation.Valid;
+
+    import static antifraud.dto.response.ResultResponse.Result.*;
+
+    @RestController
+    @RequestMapping("/api/antifraud")
+    public class TransactionController {
+
+        @PostMapping("/transaction")
+        public ResponseEntity<ResultResponse> transaction(@RequestBody @Valid WithdrawRequest withdrawRequest) {
+            ResultResponse.Result result = null;
+
+            if (withdrawRequest.getAmount() <= 200) {
+                result = ALLOWED;
+            } else if (withdrawRequest.getAmount() <= 1500) {
+                result = MANUAL_PROCESSING;
+            } else {
+                result = PROHIBITED;
+            }
+
+            return ResponseEntity.ok(new ResultResponse(result));
+        }
+    }
+  learner_created: true
+- name: src/antifraud/entity/User.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/repository/UserRepository.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/controller/UserController.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/config/RestAuthenticationEntry.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/service/UserService.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/config/WebSecurityConfig.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/service/CustomUserDetailService.java
+  visible: true
+  learner_created: true
+- name: src/antifraud/dto/response/DeleteUserResponse.java
+  visible: true
+  learner_created: true
 feedback_link: https://hyperskill.org/projects/232/stages/1162/implement#comment
-status: Unchecked
-record: -1
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Thu, 08 Dec 2022 22:55:20 UTC"
+record: 2
